@@ -1,0 +1,22 @@
+-js object vs json 
+-add the express.json mw to your app
+-make your signup api dynamic to recieve data from the end user
+-user.findone with duplicate email ids, which object returned
+- api - set user by email
+- api - feed api - get/feed - geet all the users from the database
+- create a delete user api
+- diff between patch and put 
+- create a update user api
+- explore the mongoose documentation for model api/method
+- what are options in a model.findoneandupdate method, exploreit 
+- create a update api with email id
+- explore schematype options from the documentation
+- add required, unique, lowercase, min, minlength, trim
+- add default
+- create a cutom validate function for gender
+- improve the db schemaa pull all appropriate validations
+- add timestamps to userschema
+- add api level validation on patch request and signup post api
+- add api validation for each field 
+- install validator
+- explore validator livrary function and use it for paswd , email, photourl
