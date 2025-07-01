@@ -2,26 +2,64 @@ const express = require("express");
 const connectDB = require("./config/database.js");
 const app = express();
 const User = require("./models/user.js");
+const { validatesingupdata } = require("./utils/validation.js");
+const bcrypt = require("bcrypt");
 
 app.use(express.json());
 
 app.post("/signup", async(req, res)=>{
 
-     const user = new User(req.body);
-    try{
+    // validation of data
+
+ try{
+   validatesingupdata(req); 
+
+   const {firstname, lastname, email, password} = req.body;
+
+   //Encrypt the password
+   const passwordHash = await bcrypt.hash(password, 10);
+   console.log(passwordHash);
+//Creating a new instance of the user model
+
+     const user = new User({
+        firstname,
+        lastname,
+        email,
+        password: passwordHash,
+     });
      await user.save();
      res.send("User added successfully");
     }
     catch(err){
-        res.status(500).send("Error adding user: " + err.message);
+     res.status(500).send("Error adding user: " + err.message);
     }
  })
+   
+app.post("/login", async(req, res)=>{
+    try{
+          const {email, password} = req.body;
+          const user = await User.findOne({email:email});
+          if(!user){
+            throw new Error("Invalid email or password");
+          }
+          const ispassvalid = await bcrypt.compare(password, user.password);
+          if(ispassvalid){
+            res.send("Login successful");
+          }else{
+            throw new Error("Invalid email or password");
+          }
+    }
+    catch(err){
+        res.status(500).send("Error logging in: " + err.message);   
+}
+});
+
 
 app.get("/feed", async (req,res)=>{
-    const useremail = req.body.email;
+    const useremail = req.query.email;
     try{
         const users = await User.findOne({email: useremail});
-        if(users.length === 0){
+        if(!users){
             res.status(404).send("No users found with the provided email");
         }else{
             res.send(users);
@@ -44,9 +82,9 @@ app.get("/all",async(req,res)=>{
     }
 })
 
-app.get("/delete", async(req,res)=>{
+app.delete("/delete", async(req,res)=>{
      const userid = req.body.userid;
-     try{
+     try{ 
         const user = await User.findByIdAndDelete(userid);
         if(!user){
             res.status(404).send("User not found with the provided ID");
@@ -56,12 +94,7 @@ app.get("/delete", async(req,res)=>{
      }catch(err){
         res.status(500).send("Error deleting user: " + err.message);
      }
-})
-
-connectDB()
-.then(()=>{
-    console.log("MongoDB connected successfully");
-})
+});
 
 connectDB()
 .then(()=>{

@@ -20,3 +20,9 @@
 - add api validation for each field 
 - install validator
 - explore validator livrary function and use it for paswd , email, photourl
+
+-validate data in signup api
+-install bcrypt package
+=create passwordhash usning bcrypt.hash and save user 
+- create login api
+- compare passwords and throw errors if email or password is invalid
