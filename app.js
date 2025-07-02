@@ -4,8 +4,11 @@ const app = express();
 const User = require("./models/user.js");
 const { validatesingupdata } = require("./utils/validation.js");
 const bcrypt = require("bcrypt");
+const cookieParser = require("cookie-parser");
+const jwt = require("jsonwebtoken"); 
 
 app.use(express.json());
+app.use(cookieParser());
 
 app.post("/signup", async(req, res)=>{
 
@@ -44,16 +47,41 @@ app.post("/login", async(req, res)=>{
           }
           const ispassvalid = await bcrypt.compare(password, user.password);
           if(ispassvalid){
+            // Create a JWT token or set a cookie here if needed
+            const token = await jwt.sign({ _id: user._id,  },"devtindersecret") 
+
+            //add the token to cookie and send the response back to the user
+            res.cookie("token",token)
+            
             res.send("Login successful");
           }else{
             throw new Error("Invalid email or password");
           }
+          
     }
     catch(err){
         res.status(500).send("Error logging in: " + err.message);   
 }
 });
 
+app.get("/profile",async(req, res)=>{
+    const cookies = req.cookies;
+  try{
+    const {token} = cookies;
+    if(!token){
+        throw new Error("No token found, please login first");
+    }
+    const decodemsg = await jwt.verify(token, "devtindersecret");
+    const { _id } = decodemsg;
+    const user = await User.findById(_id);
+    if(!user){
+        throw new Error("User not found");
+    }
+    res.send(user);
+    }catch(err){
+        res.status(500).send("Error fetching profile: " + err.message);
+    }
+})
 
 app.get("/feed", async (req,res)=>{
     const useremail = req.query.email;
