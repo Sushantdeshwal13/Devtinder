@@ -6,6 +6,8 @@ const { validatesingupdata } = require("./utils/validation.js");
 const bcrypt = require("bcrypt");
 const cookieParser = require("cookie-parser");
 const jwt = require("jsonwebtoken"); 
+const {userAuth} = require("./middleware/auth.js");
+
 
 app.use(express.json());
 app.use(cookieParser());
@@ -42,13 +44,14 @@ app.post("/login", async(req, res)=>{
     try{
           const {email, password} = req.body;
           const user = await User.findOne({email:email});
-          if(!user){
+          if(!user){ 
             throw new Error("Invalid email or password");
           }
-          const ispassvalid = await bcrypt.compare(password, user.password);
+          const ispassvalid = await user.validatepassword(password);
+          
           if(ispassvalid){
             // Create a JWT token or set a cookie here if needed
-            const token = await jwt.sign({ _id: user._id,  },"devtindersecret") 
+            const token = await user.getJWT(); 
 
             //add the token to cookie and send the response back to the user
             res.cookie("token",token)
@@ -64,24 +67,24 @@ app.post("/login", async(req, res)=>{
 }
 });
 
-app.get("/profile",async(req, res)=>{
-    const cookies = req.cookies;
+app.get("/profile", userAuth, async(req, res)=>{
   try{
-    const {token} = cookies;
-    if(!token){
-        throw new Error("No token found, please login first");
-    }
-    const decodemsg = await jwt.verify(token, "devtindersecret");
-    const { _id } = decodemsg;
-    const user = await User.findById(_id);
-    if(!user){
-        throw new Error("User not found");
-    }
+   
+    const user = req.user;
     res.send(user);
     }catch(err){
         res.status(500).send("Error fetching profile: " + err.message);
     }
 })
+app.get("/sendconnection", userAuth, async (req,res)=>{
+       try{
+        const user = req.user;
+        res.send(user);
+         }catch(err){
+            res.status(500).send("Error sending connection: " + err.message);
+       }
+}
+)
 
 app.get("/feed", async (req,res)=>{
     const useremail = req.query.email;
@@ -96,33 +99,6 @@ app.get("/feed", async (req,res)=>{
         res.status(500).send("Error fetching users: " + err.message);   
     }
 })
-app.get("/all",async(req,res)=>{
-
-    try{
-        const users = await User.find({});
-        if(users.length ===0){
-            res.status(400).send("No users found");
-        }else{
-            res.send(users);
-        }
-    }catch(err){
-        res.status(500).send("Error fetching users: " + err.message);
-    }
-})
-
-app.delete("/delete", async(req,res)=>{
-     const userid = req.body.userid;
-     try{ 
-        const user = await User.findByIdAndDelete(userid);
-        if(!user){
-            res.status(404).send("User not found with the provided ID");
-        }else{
-                res.send("User deleted successfully");
-            }
-     }catch(err){
-        res.status(500).send("Error deleting user: " + err.message);
-     }
-});
 
 connectDB()
 .then(()=>{

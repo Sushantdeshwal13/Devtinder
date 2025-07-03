@@ -32,3 +32,12 @@
 - install jsonwebtoken
 - in login api, after email and password validation, create a jwt token and send it to user in cookies
 - read the cookies inside your profile api and find the logged in user.
+- userAuth mw
+- add the userAuth mw in profile api and a new sendconnection api
+- set the expiry of jwt token and cookies to 7 days
+- create userschema method to getjwt()
+- create userschmea method to compare password( password input by user)
+
+-explore tinder APIs
+-create a list of all apis you can think in dev tinder
+- group multiple routes under respective routers
