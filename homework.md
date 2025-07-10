@@ -41,3 +41,24 @@
 -explore tinder APIs
 -create a list of all apis you can think in dev tinder
 - group multiple routes under respective routers
+- read documentation for express.router
+- create routes folder for managing auth, profile, request routers
+- create authrouter, profilerouter, requestrouter
+- import these routers in app.js
+
+- create post/logout api
+- create patch/profile/edit
+- create patch/profile/password api => forgot password api
+- make sure you validate all data in every post, patch apis. 
+
+- create connection request schema
+- send connection request api
+- proper validation of data
+- think about conrner cases
+- $or query $and query in mongodb
+- read logical queries 
+- schema.pre("save") function
+-  read more about indexes in mongodb
+- why do we need index in db?
+- adv. and dis of creating index?
+- read about compound indexes

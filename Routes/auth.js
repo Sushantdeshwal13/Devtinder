@@ -6,7 +6,7 @@ const User = require("../models/user.js");
 const JWT = require("jsonwebtoken");
 const { userAuth } = require("../middleware/auth.js");
 
-authRouter.get("/signup",async(req, res)=>{
+authRouter.post("/signup",async(req, res)=>{
       // validation of data
    try{
      validatesingupdata(req); 
@@ -58,5 +58,15 @@ authRouter.post("/login", async(req, res)=>{
          res.status(500).send("Error logging in: " + err.message);   
  }
  });
+
+ authRouter.post("/logout", userAuth, async(req,res)=>{
+    try{
+        // clear the token from the cookie
+        res.clearCookie("token");
+        res.send("Logout successful");
+    }catch(err){
+        res.status(500).send("error logging out: " + err.message);
+    }
+ }) 
 
  module.exports = authRouter;
