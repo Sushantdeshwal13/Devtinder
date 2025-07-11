@@ -69,3 +69,14 @@
  - read about ref and populate 
  - create get /user/requests/received with all the checks 
  - create get /user/connections
+
+ - logic for get / feed api
+ - explore the $nin, $and, $ne and other query  parameters
+ - pagination
+
+ /feed?paage=1&limit=10 => 1-10
+ /feed?paage=1&limit=10 => 10-20
+ /feed?paage=1&limit=10 => 20-30
+
+ .skip(0) & .limit(10) it will give first 10 users
+ skip = (page-1)*limit;
