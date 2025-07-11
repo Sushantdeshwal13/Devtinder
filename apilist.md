@@ -10,8 +10,11 @@ patch /profile/edit
 patch /profile/password
 
 # connectionrequestrouter
-post /request/send/interested/:userid
-post /request/send/ignored/:userid
+post /request/send/:status/userid
+(post /request/send/interested/:userid
+post /request/send/ignored/:userid)
+
+post /request/send/:status/:userid
 post /request/reviews/accepted/:requestid
 post /request/review/rejected/:requestid
 

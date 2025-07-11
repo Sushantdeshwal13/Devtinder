@@ -4,18 +4,22 @@ const connectionschema = new mongoose.Schema({
     
      sender:{
         type:mongoose.Schema.Types.ObjectId,
+         ref: "User", // reference to the User collection
         required:true,
+       
      },
      receiver:{
          type:mongoose.Schema.Types.ObjectId,
-        required:true,
+          ref:"User",
+         required:true,
+       
      },
      status:{
         type:String,
         required:true,
         enum:{
         values : ["ignored","interested", "accepted", "rejected"],  // you create enum when the values are related and should not change
-        message: `{VALUE} is iincorrect status type`
+        message: `{VALUE} is incorrect status type`
     }
 }
 },{
@@ -34,6 +38,6 @@ const connectionschema = new mongoose.Schema({
     next();
  });
 
-const connectionrequest = mongoose.model("ConnectionRequest", connectionschema);
+const ConnectionRequest = mongoose.model("ConnectionRequest", connectionschema);
 
-module.exports = connectionrequest;
+module.exports = ConnectionRequest;

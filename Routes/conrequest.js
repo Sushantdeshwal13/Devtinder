@@ -1,10 +1,12 @@
 const express = require("express");
+const mongoose = require("mongoose");
 const {userAuth} = require("../middleware/auth.js");
 // This router handles requests related to sending connection requests
 // It is used to send connection requests to other users in the application
 const requestRouter = express.Router();
 const connectionrequest = require("../models/connectionrequest");
 const User = require("../models/user");
+const ConnectionRequest = require("../models/connectionrequest");
 
 requestRouter.post(
        "/request/send/:status/:touserid",
@@ -55,5 +57,40 @@ requestRouter.post(
         }
        }
     );
+
+
+requestRouter.post(
+  "/request/review/:status/:requestid",
+  userAuth,
+  async (req, res) => {
+    try {
+      const loggedinuser = req.user;
+      const { status, requestid } = req.params;
+
+      const allowedstatus = ["accepted", "rejected"];
+      if (!allowedstatus.includes(status)) {
+        return res.status(400).json({ message: "Status not allowed" });
+      }
+      const connectionRequest = await ConnectionRequest.findOne({
+          _id: requestid,
+          receiver: loggedinuser._id,
+          status: "interested",
+      })
+        if(!connectionRequest){
+          return res.status(404).json({message: "Status not allowed"})
+        }
+
+      // ✅ Update and save
+      connectionRequest.status = status;
+      const data = await connectionRequest.save();
+
+      res.json({ message: "Connection request " + status, data });
+    } catch (err) {
+      console.error("Review Error:", err);
+      res.status(500).send("ERROR: " + err.message);
+    }
+  }
+);
+
 
 module.exports = requestRouter; 

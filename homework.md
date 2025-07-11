@@ -62,3 +62,10 @@
 - why do we need index in db?
 - adv. and dis of creating index?
 - read about compound indexes
+
+- write code with proper validations for post 
+ /request/review/:status/:requestid
+ - thought process - Post vs get
+ - read about ref and populate 
+ - create get /user/requests/received with all the checks 
+ - create get /user/connections
