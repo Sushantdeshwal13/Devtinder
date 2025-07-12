@@ -1,4 +1,5 @@
 {
+<<<<<<< HEAD
   "name": "devtinderf",
   "private": true,
   "version": "0.0.0",
@@ -32,5 +33,28 @@
     "postcss": "^8.5.6",
     "tailwindcss": "^3.3.3",
     "vite": "^7.0.4"
+=======
+  "name": "devtinder",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "dev": "node app.js"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "type": "commonjs",
+  "dependencies": {
+    "bcrypt": "^6.0.0",
+    "bcryptjs": "^3.0.2",
+    "cookie-parser": "^1.4.7",
+    "express": "^5.1.0",
+    "jsonwebtoken": "^9.0.2",
+    "mongoose": "^8.16.0",
+    "nodemon": "^3.1.10",
+    "validator": "^13.15.15"
+>>>>>>> b42695ce2999094fa6bbfbae6f9c42628a1fa550
   }
 }
